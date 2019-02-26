@@ -1,0 +1,47 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  TargetRailsVersion: 5.1
+  Exclude:
+    - 'Rakefile'
+
+Rails:
+  Enabled: true
+
+# Don't enforce documentation
+Style/Documentation:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Lint/BooleanSymbol:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Metrics:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Performance/FixedSize:
+  Exclude:
+    - 'test/**/*'
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/**/*'
