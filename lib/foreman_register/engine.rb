@@ -32,11 +32,9 @@ module ForemanRegister
     end
 
     config.to_prepare do
-      begin
-        Host::Managed.send(:include, ForemanRegister::HostExtensions)
-      rescue StandardError => e
-        Rails.logger.warn "ForemanRegister: skipping engine hook (#{e})"
-      end
+      Host::Managed.send(:include, ForemanRegister::HostExtensions)
+    rescue StandardError => e
+      Rails.logger.warn "ForemanRegister: skipping engine hook (#{e})"
     end
   end
 end
