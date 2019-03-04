@@ -30,11 +30,17 @@ module ForemanRegister
     def find_host
       token = params[:token]
       jwt_payload = ForemanRegister::RegistrationToken.new(token).decode
+      return render_error(message: 'Registration token is missing or invalid.') unless jwt_payload
+
       @host = Host::Managed.find_by!(id: jwt_payload['host_id'])
     end
 
     def skip_secure_headers
       SecureHeaders.opt_out_of_all_protection(request)
+    end
+
+    def render_error(message:, status: :bad_request)
+      render plain: "#!/bin/sh\necho \"#{message}\"\nexit 1\n", status: status
     end
   end
 end

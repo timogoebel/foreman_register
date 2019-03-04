@@ -11,18 +11,21 @@ module ForemanRegister
       private
 
       def prepare_payload(host, secret)
-        iat = Time.now.to_i # Issued At
-        exp = Time.now.advance(hours: 24).to_i # Expiration Time
-        nbf = Time.now.to_i - 3600 # Not Before Time
+        exp = iat + (24 * 3600)
+        nbf = iat - 3600
         jti_raw = [secret, iat].join(':')
-        jti = Digest::SHA256.hexdigest(jti_raw) # JWT ID
+        jti = Digest::SHA256.hexdigest(jti_raw)
         {
           host_id: host.id,
-          iat: iat,
-          jti: jti,
-          exp: exp,
-          nbf: nbf
+          iat: iat, # Issued At
+          jti: jti, # JWT ID
+          exp: exp, # Expiration Time
+          nbf: nbf # Not Before Time
         }
+      end
+
+      def iat
+        Time.now.to_i
       end
     end
 
@@ -52,6 +55,8 @@ module ForemanRegister
 
     def find_secret
       host = ForemanRegister::RegistrationFacet.find_by(host_id: unsecure_payload['host_id'])&.host
+      return unless host
+
       facet = host.registration_facet!
       facet.jwt_secret
     end
