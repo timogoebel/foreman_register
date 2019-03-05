@@ -10,7 +10,7 @@ module ForemanRegister
 
     setup do
       # Travel back in time as above token will eventually expire
-      travel_to Time.at(1_551_729_561)
+      travel_to Time.at(1_551_729_561).utc
     end
 
     describe 'encoding' do

@@ -34,6 +34,4 @@ end
 Rake::Task[:test].enhance ['test:foreman_register']
 
 load 'tasks/jenkins.rake'
-if Rake::Task.task_defined?(:'jenkins:unit')
-  Rake::Task['jenkins:unit'].enhance ['test:foreman_register', 'foreman_register:rubocop']
-end
+Rake::Task['jenkins:unit'].enhance ['test:foreman_register', 'foreman_register:rubocop'] if Rake::Task.task_defined?(:'jenkins:unit')
