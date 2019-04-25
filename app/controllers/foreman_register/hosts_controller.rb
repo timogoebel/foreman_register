@@ -22,7 +22,8 @@ module ForemanRegister
 
     def register
       @host.setBuild
-      render :register, layout: false, formats: [:text]
+      template = rendered_registration_template
+      render plain: template if template
     end
 
     private
@@ -39,8 +40,35 @@ module ForemanRegister
       SecureHeaders.opt_out_of_all_protection(request)
     end
 
-    def render_error(message:, status: :bad_request)
-      render plain: "#!/bin/sh\necho \"#{message}\"\nexit 1\n", status: status
+    def render_error(message:, status: :bad_request, **kwargs)
+      render plain: "#!/bin/sh\necho \"#{message % kwargs}\"\nexit 1\n", status: status
+    end
+
+    def rendered_registration_template
+      template = @host.registration_template
+      unless template
+        render_error(
+          message: 'Unable to find registration template for host %{host} running %{os}',
+          status: :not_found,
+          host: @host.name,
+          os: @host.operatingsystem
+        )
+        return
+      end
+      safe_render(template)
+    end
+
+    def safe_render(template)
+      template.render(host: @host, params: params)
+    rescue StandardError => e
+      Foreman::Logging.exception("Error rendering the #{template.name} template", e)
+      render_error(
+        message: 'There was an error rendering the %{name} template: %{error}',
+        status: :internal_server_error,
+        name: template.name,
+        error: e.message
+      )
+      false
     end
   end
 end

@@ -45,3 +45,7 @@ Lint/AmbiguousBlockAssociation:
 Style/ClassAndModuleChildren:
   Exclude:
     - 'test/**/*'
+
+Naming/FileName:
+  Exclude:
+    - 'db/seeds.d/*'
