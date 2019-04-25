@@ -17,6 +17,9 @@ module ForemanRegister
       Foreman::Plugin.register :foreman_register do
         requires_foreman '>= 1.22'
 
+        # registration template kind
+        template_labels 'registration' => N_('Registration template')
+
         # Registration Facet
         register_facet(ForemanRegister::RegistrationFacet, :registration_facet) do
           set_dependent_action :destroy
@@ -35,6 +38,12 @@ module ForemanRegister
       Host::Managed.send(:include, ForemanRegister::HostExtensions)
     rescue StandardError => e
       Rails.logger.warn "ForemanRegister: skipping engine hook (#{e})"
+    end
+
+    rake_tasks do
+      Rake::Task['db:seed'].enhance do
+        ForemanRegister::Engine.load_seed
+      end
     end
   end
 end

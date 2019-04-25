@@ -1,3 +1,11 @@
+<%#
+kind: registration
+name: Linux registration default
+model: ProvisioningTemplate
+oses:
+- CentOS
+- Fedora
+-%>
 #!/bin/bash
 
 set -e
@@ -52,7 +60,7 @@ EOF
 
 # Call home to exit build mode
 
-curl -o /dev/null --noproxy \* '<%= @host.foreman_url('built') %>'
+curl -o /dev/null --noproxy \* '<%= foreman_url('built') %>'
 
 echo "Successfully enrolled host <%= @host.name %> with Foreman."
 
